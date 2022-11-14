@@ -1,8 +1,13 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 using TodoList.Data;
 using TodoList.Model;
@@ -14,10 +19,12 @@ namespace TodoList.Controllers
     public class LoginController : ControllerBase
     {
         private readonly MyDbContext _context;
+        private readonly IConfiguration _configuration;
 
-        public LoginController(MyDbContext context)
+        public LoginController(MyDbContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
         }
         [HttpPost("Login")]
         public IActionResult Validate(Login lg)
@@ -36,8 +43,26 @@ namespace TodoList.Controllers
             {
                 Success = true,
                 Message = "Dang nhap thanh cong!",
+                Data = GenerateToken(user)
             }
-            );
+            ) ;
+        }
+        private string GenerateToken(Users user)
+        {
+            var jwtTokenHandler = new JwtSecurityTokenHandler();
+            var secretKeyBytes = Encoding.UTF8.GetBytes(_configuration["AppSettings:SecretKey"]);
+            var tokenDescription = new SecurityTokenDescriptor()
+            {
+
+                Subject = new ClaimsIdentity(new[] {
+                    new Claim(ClaimTypes.Name, user.UserName),
+                    new Claim("Id", user.UserId.ToString())
+                }),
+                Expires = DateTime.UtcNow.AddHours(12),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(secretKeyBytes), SecurityAlgorithms.HmacSha256Signature)
+            };
+            var token = jwtTokenHandler.CreateToken(tokenDescription);
+            return jwtTokenHandler.WriteToken(token);
         }
     }
 }
