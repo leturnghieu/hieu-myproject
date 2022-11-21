@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TodoList.Data;
+using TodoList.Service;
 
 namespace TodoList
 {
@@ -30,6 +31,7 @@ namespace TodoList
         {
 
             services.AddControllers();
+            services.AddLogging();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "TodoList", Version = "v1" });
@@ -38,6 +40,7 @@ namespace TodoList
             {
                 option.UseSqlServer(Configuration.GetConnectionString("MyDb"));
             });
+            services.AddScoped<IUsers, UsersRepo>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -53,6 +56,8 @@ namespace TodoList
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

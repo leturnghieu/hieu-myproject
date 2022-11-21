@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace TodoList.Model
+﻿using System.ComponentModel.DataAnnotations;
+namespace TodoList.DTOs
 {
-    public class SignUp
+    public class Register
     {
         [Required]
         [MaxLength(100)]
@@ -16,7 +11,5 @@ namespace TodoList.Model
              + "one lowercase letter, one number and one special character")]
         [Required(ErrorMessage = "Password is required")]
         public string Password { get; set; }
-
-        public string ConfirmPassword { get; set; }
     }
 }

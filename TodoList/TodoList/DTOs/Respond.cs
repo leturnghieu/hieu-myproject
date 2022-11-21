@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace TodoList.Model
+﻿namespace TodoList.DTOs
 {
     public class Respond
     {
