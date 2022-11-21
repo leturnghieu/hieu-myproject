@@ -7,12 +7,12 @@ namespace TodoList.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RegisterController : ControllerBase
+    public class UserController : ControllerBase
     {
         private readonly ILogger _logger;
         private readonly IUsers _users;
 
-        public RegisterController(ILogger<RegisterController> logger, IUsers users)
+        public UserController(ILogger<UserController> logger, IUsers users)
         {
             _logger = logger;
             _users = users;
