@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TodoList.DTOs;
 
-namespace TodoList.Data
+namespace TodoList.Models
 {
     public class MyDbContext: DbContext
     {

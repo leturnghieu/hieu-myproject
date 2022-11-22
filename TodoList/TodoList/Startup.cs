@@ -12,8 +12,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TodoList.Data;
-using TodoList.Service;
+using TodoList.Models;
+using TodoList.Services;
 
 namespace TodoList
 {
@@ -40,7 +40,7 @@ namespace TodoList
             {
                 option.UseSqlServer(Configuration.GetConnectionString("MyDb"));
             });
-            services.AddScoped<IUsers, UsersRepo>();
+            services.AddScoped<IUsers, UserService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
