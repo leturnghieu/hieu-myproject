@@ -15,7 +15,6 @@ namespace TodoList.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
-        }
-        
+        }   
     }
 }

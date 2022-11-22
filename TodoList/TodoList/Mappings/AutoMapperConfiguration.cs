@@ -4,13 +4,13 @@ using TodoList.Models;
 
 namespace TodoList.Mappings
 {
-    public class AutoMapperConfiguration
+    public class AutoMapperConfiguration : Profile
     {
-        public static void Configure(IMapperConfigurationExpression cfg)
+        public AutoMapperConfiguration()
         {
-            cfg.CreateMap<Register, Users>();
-            cfg.CreateMap<Users, Register>();
+            CreateMap<Register, Users>().ForMember(
+                    des => des.UserName, act => act.MapFrom(src => src.UserName))
+                    .ForMember(des => des.Password, act => act.MapFrom(src => BCrypt.Net.BCrypt.HashPassword(src.Password, 10)));
         }
-        
     }
 }

@@ -5,7 +5,7 @@ using TodoList.Models;
 
 namespace TodoList.Services
 {
-    public interface IUsers
+    public interface IUserService
     {
         Task<Register> SignUp(Register user);
         /*Task<Register> Login(Register user);*/

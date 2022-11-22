@@ -11,19 +11,18 @@ namespace TodoList.Controllers
     public class UsersController : ControllerBase
     {
         private readonly ILogger<UsersController> _logger;
-        private readonly IUsers _users;
+        private readonly IUserService _userService;
 
-        public UsersController(ILogger<UsersController> logger, IUsers users)
+        public UsersController(ILogger<UsersController> logger, IUserService userService)
         {
             _logger = logger;
-            _users = users;
+            _userService = userService;
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult<Register>> SignUp(Register user)
+        public async Task<ActionResult<Respond>> SignUp(Register user)
         {
-
-            if (await _users.SignUp(user) == null)
+            if (await _userService.SignUp(user) == null)
             {
                 _logger.LogInformation("Tao tai khoan that bai!");
                 return Ok(new Respond {

@@ -1,31 +1,32 @@
 ﻿using TodoList.Models;
 using TodoList.DTOs;
-using TodoList.Extensions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using TodoList.Utils;
+using TodoList.Mappings;
+using AutoMapper;
 
 namespace TodoList.Services
 {
-    public class UserService : IUsers
+    public class UserService : IUserService
     {
         private readonly MyDbContext _context;
         private readonly ILogger<UserService> _logger;
+        private readonly IMapper _mapper;
 
-        public UserService(MyDbContext context, ILogger<UserService> logger)
+        public UserService(MyDbContext context, ILogger<UserService> logger, IMapper mapper)
         {
             _context = context;
             _logger = logger;
+            _mapper = mapper;
         }
         public async Task<Register> SignUp(Register user)
         {
-            var query = await _context.users.SingleOrDefaultAsync(u => u.UserName == user.UserName);
+            var query = await _context.users.FirstOrDefaultAsync(u => u.UserName == user.UserName);
             if (query == null)
             {
-                Users useradd = new Users();
-                useradd.UpdateUser(user);
-                _context.Add(useradd);
+                Users userAdd = _mapper.Map<Users>(user);
+                _context.Add(userAdd);
                 await _context.SaveChangesAsync();
                 return user;
             }
