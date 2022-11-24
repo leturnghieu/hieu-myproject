@@ -7,7 +7,7 @@ namespace TodoList.Models
     {
         public MyDbContext(DbContextOptions options) : base(options) { }
 
-        public DbSet<Users> users { get; set; }
+        public DbSet<User> users { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionBuilder)
         {
 

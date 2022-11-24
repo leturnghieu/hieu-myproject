@@ -25,7 +25,7 @@ namespace TodoList.Services
             var query = await _context.users.FirstOrDefaultAsync(u => u.UserName == user.UserName);
             if (query == null)
             {
-                Users userAdd = _mapper.Map<Users>(user);
+                User userAdd = _mapper.Map<User>(user);
                 _context.Add(userAdd);
                 await _context.SaveChangesAsync();
                 return user;

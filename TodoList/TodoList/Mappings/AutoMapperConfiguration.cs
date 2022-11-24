@@ -8,7 +8,7 @@ namespace TodoList.Mappings
     {
         public AutoMapperConfiguration()
         {
-            CreateMap<Register, Users>().ForMember(
+            CreateMap<Register, User>().ForMember(
                     des => des.UserName, act => act.MapFrom(src => src.UserName))
                     .ForMember(des => des.Password, act => act.MapFrom(src => BCrypt.Net.BCrypt.HashPassword(src.Password, 10)));
         }

@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace TodoList.Models
 {
     [Table("Users")]
-    public class Users
+    public class User
     {
         [Key]
         public Guid UserId { get; set; }
