@@ -1,5 +1,4 @@
-﻿
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using TodoList.DTOs;
 using TodoList.Models;
 
