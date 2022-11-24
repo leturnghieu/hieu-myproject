@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using TodoList.DTOs;
 
 namespace TodoList.Models
 {

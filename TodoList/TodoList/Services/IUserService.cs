@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using TodoList.DTOs;
-using TodoList.Models;
 
 namespace TodoList.Services
 {
