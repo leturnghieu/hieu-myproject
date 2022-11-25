@@ -1,14 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-namespace TodoList.Data
+
+namespace TodoList.Models
 {
     public class MyDbContext: DbContext
     {
         public MyDbContext(DbContextOptions options) : base(options) { }
 
+        public DbSet<User> users { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionBuilder)
         {
 
@@ -16,7 +14,6 @@ namespace TodoList.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
-        }
-        public DbSet<Users> users { get; set; }
+        }   
     }
 }

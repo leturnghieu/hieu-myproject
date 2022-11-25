@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace TodoList.Data
+namespace TodoList.Models
 {
     [Table("Users")]
-    public class Users
+    public class User
     {
         [Key]
         public Guid UserId { get; set; }
