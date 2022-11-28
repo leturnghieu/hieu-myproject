@@ -3,8 +3,9 @@ using TodoList.DTOs;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using TodoList.Mappings;
 using AutoMapper;
+using TodoList.Model;
+using System.Collections.Generic;
 
 namespace TodoList.Services
 {
@@ -33,15 +34,26 @@ namespace TodoList.Services
             _logger.LogInformation("Ten tai khoan da ton tai");
             return null;
         }
-        /*public async Task<Register> Login(Register user)
+        public async Task<bool> Login(Login user)
         {
-            var query = await _context.users.SingleOrDefaultAsync(u => u.UserName == user.UserName && u.Password == EncodePassword.ConvertToEncrypt(user.Password));
-            if(query == null)
+            var query = await _context.users.FirstOrDefaultAsync(u => u.UserName == user.UserName);
+            if(query != null)
             {
-                return null;
-            }
-            return user;
+                try
+                {
+                    bool isValidPassword = BCrypt.Net.BCrypt.Verify(user.Password, query.Password);
+                    if (isValidPassword == true)
+                    {
+                        return true;
+                    }
+                }
+                catch (System.Exception)
+                {
 
-        }*/
+                    return false;
+                }
+            }
+            return false;
+        }
     }
 }
