@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using TodoList.DTOs;
-using TodoList.Model;
 using TodoList.Models;
 
 namespace TodoList.Services
@@ -9,6 +8,6 @@ namespace TodoList.Services
     public interface IUserService
     {
         Task<Register> SignUp(Register user);
-        Task<bool> Login(Login user);
+        Task<string> Login(Login user);
     }
 }

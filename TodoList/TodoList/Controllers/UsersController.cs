@@ -1,17 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 using TodoList.DTOs;
-using TodoList.Model;
-using TodoList.Models;
 using TodoList.Services;
 
 namespace TodoList.Controllers
@@ -22,13 +13,11 @@ namespace TodoList.Controllers
     {
         private readonly ILogger<UsersController> _logger;
         private readonly IUserService _userService;
-        private readonly IConfiguration _configuration;
 
-        public UsersController(ILogger<UsersController> logger, IUserService userService, IConfiguration configuration)
+        public UsersController(ILogger<UsersController> logger, IUserService userService)
         {
             _logger = logger;
             _userService = userService;
-            _configuration = configuration;
         }
 
         [HttpPost("register")]
@@ -55,13 +44,13 @@ namespace TodoList.Controllers
         [HttpPost("login")]
         public async Task<ActionResult> Login(Login user)
         {
-            if (await _userService.Login(user))
+            if (await _userService.Login(user) != null)
             {
                 return Ok(new Respond
                 {
                     Success = true,
                     Message = "Dang nhap thanh cong",
-                    Data = GenerateToken(user)
+                    Data = await _userService.Login(user)
                 });           
             }
             return Ok(new Respond
@@ -69,22 +58,6 @@ namespace TodoList.Controllers
                 Success = false,
                 Message = "Dang nhap that bai"
             });
-        }
-        private string GenerateToken(Login user)
-        {
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-            var claims = new[]
-            {
-                new Claim(ClaimTypes.Name, user.UserName)
-            };
-            var token = new JwtSecurityToken(
-                _configuration["Jwt:Issuer"],
-                _configuration["Jwt:Audience"],
-                claims,
-                expires: DateTime.Now.AddMinutes(15),
-                signingCredentials: credentials);
-            return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
 }
