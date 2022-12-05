@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 using TodoList.DTOs;
@@ -42,21 +42,18 @@ namespace TodoList.Controllers
             }
         }
         [HttpPost("login")]
-        public async Task<ActionResult> Login(Login user)
+        public async Task<IActionResult> Login(Login user)
         {
-            if (await _userService.Login(user) != null)
+            var Token = await _userService.Login(user);
+            if (Token == null)
             {
-                return Ok(new Respond
-                {
-                    Success = true,
-                    Message = "Dang nhap thanh cong",
-                    Data = await _userService.Login(user)
-                });           
+                return BadRequest(500);  
             }
             return Ok(new Respond
             {
-                Success = false,
-                Message = "Dang nhap that bai"
+                Success = true,
+                Message = "Dang nhap thanh cong",
+                Data = Token
             });
         }
     }

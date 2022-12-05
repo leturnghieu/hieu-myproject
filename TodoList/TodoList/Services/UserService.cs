@@ -10,9 +10,12 @@ using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using System;
 using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 
 namespace TodoList.Services
 {
+
     public class UserService : IUserService
     {
         private readonly MyDbContext _context;
@@ -40,25 +43,21 @@ namespace TodoList.Services
             _logger.LogInformation("Ten tai khoan da ton tai");
             return null;
         }
-        public async Task<string> Login(Login user)
+        public async Task<ActionResult<string>> Login(Login user)
         {
-            var query = await _context.users.FirstOrDefaultAsync(u => u.UserName == user.UserName);
-            if(query != null)
+            var User = await _context.users.FirstOrDefaultAsync(u => u.UserName == user.UserName);
+            if(User != null)
             {
-                try
+                bool isValidPassword = BCrypt.Net.BCrypt.Verify(user.Password, User.Password);
+                if (isValidPassword == true)
                 {
-                    bool isValidPassword = BCrypt.Net.BCrypt.Verify(user.Password, query.Password);
-                    if (isValidPassword == true)
-                    {
-                        return GenerateToken(query);
-                    }
-                }
-                catch (System.Exception)
-                {
-                    return null;
+
+                    _logger.LogInformation("Đăng nhập thành công!");
+                    return GenerateToken(User);
                 }
             }
-            return null;
+            _logger.LogInformation("Đăng nhập thất bại!");
+            return null ;
         }
         public string GenerateToken(User user)
         {
@@ -66,7 +65,8 @@ namespace TodoList.Services
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
             var claims = new[]
             {
-               new Claim(ClaimTypes.Name, user.UserName)
+                new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
+                new Claim(ClaimTypes.Name, user.UserName)
             };
             var token = new JwtSecurityToken(
                 _configuration["Jwt:Issuer"],
