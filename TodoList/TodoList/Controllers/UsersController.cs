@@ -40,21 +40,20 @@ namespace TodoList.Controllers
                 });
             }
         }
-        /*[HttpPost("login")]
-        public async Task<ActionResult> Login(Register user)
+        [HttpPost("login")]
+        public async Task<ActionResult<Respond>> Login(Login user)
         {
-            if(await _users.Login(user) == null)
+            var Token = await _userService.Login(user);
+            if (Token == null)
             {
-                return Ok(new Respond {
-                    Success = false,
-                    Message = "Dang nhap that bai"
-                });
+                return BadRequest(500);  
             }
             return Ok(new Respond
             {
                 Success = true,
-                Message = "Dang nhap thanh cong"
+                Message = "Dang nhap thanh cong",
+                Data = Token
             });
-        }*/
+        }
     }
 }

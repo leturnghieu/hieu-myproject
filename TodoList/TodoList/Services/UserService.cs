@@ -3,22 +3,31 @@ using TodoList.DTOs;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using TodoList.Mappings;
 using AutoMapper;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using System.Security.Claims;
+using System.IdentityModel.Tokens.Jwt;
+using System;
+using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Mvc;
 
 namespace TodoList.Services
 {
+
     public class UserService : IUserService
     {
         private readonly MyDbContext _context;
         private readonly ILogger<UserService> _logger;
         private readonly IMapper _mapper;
+        private readonly IConfiguration _configuration;
 
-        public UserService(MyDbContext context, ILogger<UserService> logger, IMapper mapper)
+        public UserService(MyDbContext context, ILogger<UserService> logger, IMapper mapper, IConfiguration configuration)
         {
             _context = context;
             _logger = logger;
             _mapper = mapper;
+            _configuration = configuration;
         }
         public async Task<Register> SignUp(Register user)
         {
@@ -33,15 +42,38 @@ namespace TodoList.Services
             _logger.LogInformation("Ten tai khoan da ton tai");
             return null;
         }
-        /*public async Task<Register> Login(Register user)
+        public async Task<ActionResult<string>> Login(Login user)
         {
-            var query = await _context.users.SingleOrDefaultAsync(u => u.UserName == user.UserName && u.Password == EncodePassword.ConvertToEncrypt(user.Password));
-            if(query == null)
+            var userCheck = await _context.users.FirstOrDefaultAsync(u => u.UserName == user.UserName);
+            if(userCheck != null)
             {
-                return null;
-            }
-            return user;
+                bool isValidPassword = BCrypt.Net.BCrypt.Verify(user.Password, userCheck.Password);
+                if (isValidPassword == true)
+                {
 
-        }*/
+                    _logger.LogInformation("Đăng nhập thành công!");
+                    return GenerateToken(userCheck);
+                }
+            }
+            _logger.LogInformation("Đăng nhập thất bại!");
+            return null ;
+        }
+        public string GenerateToken(User user)
+        {
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+            var claims = new[]
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
+                new Claim(ClaimTypes.Name, user.UserName)
+            };
+            var token = new JwtSecurityToken(
+                _configuration["Jwt:Issuer"],
+                _configuration["Jwt:Audience"],
+                claims,
+                expires: DateTime.Now.AddMinutes(15),
+                signingCredentials: credentials);
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
     }
 }
