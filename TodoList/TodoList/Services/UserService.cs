@@ -11,7 +11,6 @@ using System.IdentityModel.Tokens.Jwt;
 using System;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
 
 namespace TodoList.Services
 {
@@ -45,15 +44,15 @@ namespace TodoList.Services
         }
         public async Task<ActionResult<string>> Login(Login user)
         {
-            var User = await _context.users.FirstOrDefaultAsync(u => u.UserName == user.UserName);
-            if(User != null)
+            var userCheck = await _context.users.FirstOrDefaultAsync(u => u.UserName == user.UserName);
+            if(userCheck != null)
             {
-                bool isValidPassword = BCrypt.Net.BCrypt.Verify(user.Password, User.Password);
+                bool isValidPassword = BCrypt.Net.BCrypt.Verify(user.Password, userCheck.Password);
                 if (isValidPassword == true)
                 {
 
                     _logger.LogInformation("Đăng nhập thành công!");
-                    return GenerateToken(User);
+                    return GenerateToken(userCheck);
                 }
             }
             _logger.LogInformation("Đăng nhập thất bại!");

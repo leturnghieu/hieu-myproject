@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 using TodoList.DTOs;
@@ -42,7 +41,7 @@ namespace TodoList.Controllers
             }
         }
         [HttpPost("login")]
-        public async Task<IActionResult> Login(Login user)
+        public async Task<ActionResult<Respond>> Login(Login user)
         {
             var Token = await _userService.Login(user);
             if (Token == null)
