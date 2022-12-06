@@ -52,6 +52,7 @@ namespace TodoList
                 option.UseSqlServer(Configuration.GetConnectionString("MyDb"));
             });
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IToDoService, ToDoService>();
             services.AddMvc();
             services.AddAutoMapper(typeof(Startup));
         }
