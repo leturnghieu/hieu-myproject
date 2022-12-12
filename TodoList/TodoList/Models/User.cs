@@ -22,6 +22,6 @@ namespace TodoList.Models
 
         [MaxLength(20)]
         public string PhoneNumber { get; set; }
-        public ICollection<ToDo> Task { get; set; }
+        public ICollection<ToDo> Tasks { get; set; }
     }
 }

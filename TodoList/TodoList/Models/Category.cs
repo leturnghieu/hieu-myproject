@@ -12,6 +12,6 @@ namespace TodoList.Models
         public int CategoryId { get; set; }
         [Required]
         public string CategoryName { get; set; }
-        public ICollection<ToDo> Task { get; set; }
+        public ICollection<ToDo> Tasks { get; set; }
     }
 }

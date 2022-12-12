@@ -6,9 +6,9 @@ namespace TodoList.Models
     {
         public MyDbContext(DbContextOptions options) : base(options) { }
 
-        public DbSet<User> users { get; set; }
-        public DbSet<Category> categories { get; set; }
-        public DbSet<ToDo> toDos { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<ToDo> ToDos { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionBuilder)
         {
 
