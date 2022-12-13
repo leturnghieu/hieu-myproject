@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TodoList.Models;
 
 namespace TodoList.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    partial class MyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221206065921_UpdateDB")]
+    partial class UpdateDB
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -32,7 +34,7 @@ namespace TodoList.Migrations
 
                     b.HasKey("CategoryId");
 
-                    b.ToTable("Categories");
+                    b.ToTable("categories");
 
                     b.HasData(
                         new
@@ -89,7 +91,7 @@ namespace TodoList.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("ToDos");
+                    b.ToTable("toDos");
                 });
 
             modelBuilder.Entity("TodoList.Models.User", b =>
@@ -124,13 +126,13 @@ namespace TodoList.Migrations
             modelBuilder.Entity("TodoList.Models.ToDo", b =>
                 {
                     b.HasOne("TodoList.Models.Category", null)
-                        .WithMany("Tasks")
+                        .WithMany("Task")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("TodoList.Models.User", null)
-                        .WithMany("Tasks")
+                        .WithMany("Task")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -138,12 +140,12 @@ namespace TodoList.Migrations
 
             modelBuilder.Entity("TodoList.Models.Category", b =>
                 {
-                    b.Navigation("Tasks");
+                    b.Navigation("Task");
                 });
 
             modelBuilder.Entity("TodoList.Models.User", b =>
                 {
-                    b.Navigation("Tasks");
+                    b.Navigation("Task");
                 });
 #pragma warning restore 612, 618
         }

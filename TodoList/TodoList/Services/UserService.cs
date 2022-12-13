@@ -31,7 +31,7 @@ namespace TodoList.Services
         }
         public async Task<Register> SignUp(Register user)
         {
-            var query = await _context.users.FirstOrDefaultAsync(u => u.UserName == user.UserName);
+            var query = await _context.Users.FirstOrDefaultAsync(u => u.UserName == user.UserName);
             if (query == null)
             {
                 User userAdd = _mapper.Map<User>(user);
@@ -44,7 +44,7 @@ namespace TodoList.Services
         }
         public async Task<ActionResult<string>> Login(Login user)
         {
-            var userCheck = await _context.users.FirstOrDefaultAsync(u => u.UserName == user.UserName);
+            var userCheck = await _context.Users.FirstOrDefaultAsync(u => u.UserName == user.UserName);
             if(userCheck != null)
             {
                 bool isValidPassword = BCrypt.Net.BCrypt.Verify(user.Password, userCheck.Password);
