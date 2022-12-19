@@ -40,7 +40,19 @@ namespace TodoList.Controllers
         public async Task<ActionResult<ToDo>> GetTaskById(Guid taskId)
         {
             var userId = Guid.Parse(HttpContext.User.Claims.Where(t => t.Type == ClaimTypes.NameIdentifier).Select(v => v.Value).FirstOrDefault());
-            return Ok(await _toDoService.GetById(userId, taskId));
+            return Ok(await _toDoService.GetTaskById(userId, taskId));
+        }
+        [HttpPut("update")]
+        public async Task<ActionResult<ToDo>> UpdateTask(Guid taskId, ToDoRequest toDoRequest)
+        {
+            var userId = Guid.Parse(HttpContext.User.Claims.Where(t => t.Type == ClaimTypes.NameIdentifier).Select(v => v.Value).FirstOrDefault());
+            return Ok(await _toDoService.UpdateTask(userId, taskId, toDoRequest));
+        }
+        [HttpDelete("delete")]
+        public async Task<ActionResult<List<ToDo>>> DeleteTask(Guid taskId)
+        {
+            var userId = Guid.Parse(HttpContext.User.Claims.Where(t => t.Type == ClaimTypes.NameIdentifier).Select(v => v.Value).FirstOrDefault());
+            return Ok(await _toDoService.DeleteTask(userId, taskId));
         }
     }
 }
