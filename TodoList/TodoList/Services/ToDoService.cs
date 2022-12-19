@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
@@ -20,7 +21,7 @@ namespace TodoList.Services
             _context = context;
             _mapper = mapper;
         }
-        public async Task<ToDo> AddTask(Guid userId, ToDoRequest toDoRequest)
+        public async Task<ToDo> CreateTask(Guid userId, ToDoRequest toDoRequest)
         {
             ToDo item = _mapper.Map<ToDo>(toDoRequest);
             item.UserId = userId;

@@ -26,7 +26,7 @@ namespace TodoList.Controllers
         public async Task<ActionResult<ToDo>> CreateTask(ToDoRequest toDoRequest)
         {
             var userId = Guid.Parse(HttpContext.User.GetUserId());
-            ToDo Task = await _toDoService.AddTask(userId, toDoRequest);
+            ToDo Task = await _toDoService.CreateTask(userId, toDoRequest);
             return Ok(new Respond()
             {
                 Success = true,
