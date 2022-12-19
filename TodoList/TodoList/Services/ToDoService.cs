@@ -24,7 +24,6 @@ namespace TodoList.Services
         {
             ToDo item = _mapper.Map<ToDo>(toDoRequest);
             item.UserId = userId;
-            item.Date = DateTime.Now;
             item.Status = false;
             _context.Add(item);
             await _context.SaveChangesAsync();
@@ -38,7 +37,6 @@ namespace TodoList.Services
             {
                 _context.Remove(item);
                 _context.SaveChanges();
-            }
             return await _context.ToDos.ToListAsync();
         }
 
