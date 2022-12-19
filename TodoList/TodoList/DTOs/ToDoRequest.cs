@@ -10,5 +10,6 @@ namespace TodoList.DTOs
         [Required]
         public string Title { get; set; }
         public string Detail { get; set; }
+        public DateTime Date { get; set; }
     }
 }

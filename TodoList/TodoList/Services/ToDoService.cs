@@ -37,14 +37,17 @@ namespace TodoList.Services
             {
                 _context.Remove(item);
                 _context.SaveChanges();
-            return await _context.ToDos.ToListAsync();
+                return await _context.ToDos.ToListAsync();
+            }
+            return null;
+            
         }
 
         public async Task<ToDo> GetTaskById(Guid userId, Guid taskId)
         {
             return await _context.ToDos.FirstOrDefaultAsync(t => t.UserId == userId && t.TaskId == taskId);
         }
-        public async Task<List<ToDo>> GetTask(Guid userId)
+        public async Task<List<ToDo>> GetTasks(Guid userId)
         {
             var item = _context.ToDos.Where(t => t.UserId == userId).ToListAsync();
             return await item;
@@ -58,11 +61,13 @@ namespace TodoList.Services
                 item.CategoryId = toDoRequest.CategoryId;
                 item.Title = toDoRequest.Title;
                 item.Detail = toDoRequest.Detail;
-                item.Date = DateTime.Now;
+                item.Date = toDoRequest.Date;
                 _context.Update(item);
                 await _context.SaveChangesAsync();
+                return item;
             }
-            return item;
+            return null;
+            
         }
     }
 }
