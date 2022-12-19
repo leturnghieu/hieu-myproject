@@ -11,6 +11,7 @@ namespace TodoList.Mappings
             CreateMap<Register, User>().ForMember(
                     des => des.UserName, act => act.MapFrom(src => src.UserName))
                     .ForMember(des => des.Password, act => act.MapFrom(src => BCrypt.Net.BCrypt.HashPassword(src.Password, 10)));
+            CreateMap<ToDoRequest, ToDo>();
         }
     }
 }

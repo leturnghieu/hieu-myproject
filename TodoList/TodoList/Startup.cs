@@ -46,6 +46,29 @@ namespace TodoList
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "TodoList", Version = "v1" });
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    In = ParameterLocation.Header,
+                    Description = "Please insert token",
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.Http,
+                    BearerFormat = "JWT",
+                    Scheme = "bearer"
+                });
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        }
+                    },
+                    new string[]{}
+                    }
+                });
             });
             services.AddDbContext<MyDbContext>(option =>
             {
@@ -53,6 +76,7 @@ namespace TodoList
             });
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IToDoService, ToDoService>();
+            services.AddScoped<ICategoryService, CategoryService>();
             services.AddMvc();
             services.AddAutoMapper(typeof(Startup));
         }
