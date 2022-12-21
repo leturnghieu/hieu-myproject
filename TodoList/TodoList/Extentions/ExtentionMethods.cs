@@ -8,9 +8,9 @@ namespace TodoList.Extentions
 {
     public static class ExtentionMethods
     {
-        public static string GetUserId(this ClaimsPrincipal principal)
+        public static Guid GetUserId(this ClaimsPrincipal principal)
         {
-            return principal.FindFirstValue(ClaimTypes.NameIdentifier);
+            return Guid.Parse(principal.FindFirstValue(ClaimTypes.NameIdentifier));
         }
     }
 }

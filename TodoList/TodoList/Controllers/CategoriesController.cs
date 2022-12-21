@@ -7,7 +7,7 @@ using TodoList.Services;
 
 namespace TodoList.Controllers
 {
-    [Route("api/categories")]
+    [Route("api/[controller]")]
     [ApiController]
     [Authorize]
     public class CategoriesController : Controller
@@ -18,7 +18,7 @@ namespace TodoList.Controllers
         {
             _categoryService = categoryService;
         }
-        [HttpGet("getall")]
+        [HttpGet]
         public async Task<ActionResult<List<Category>>> GetAll()
         {
             return await _categoryService.GetAll();

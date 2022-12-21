@@ -6,7 +6,7 @@ using TodoList.Services;
 
 namespace TodoList.Controllers
 {
-    [Route("api/users")]
+    [Route("api/[controller]")]
     [ApiController]
     public class UsersController : ControllerBase
     {

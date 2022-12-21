@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
+using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +23,23 @@ namespace TodoList.Services
             _context = context;
             _mapper = mapper;
         }
+
+        public async Task<List<ToDo>> CompleteTasks(Guid userId, List<Guid> taskIds)
+        {
+            using (IDbContextTransaction transaction = _context.Database.BeginTransaction())
+            {
+                var tasks = await _context.ToDos.Where(t => taskIds.Contains(t.TaskId) && t.UserId == userId).ToListAsync();
+                foreach (var task in tasks)
+                {
+                    task.Status = true;
+                }
+                _context.UpdateRange(tasks);
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+            }
+            return await _context.ToDos.Where(t => t.UserId == userId).ToListAsync();
+        }
+
         public async Task<ToDo> CreateTask(Guid userId, ToDoRequest toDoRequest)
         {
             ToDo item = _mapper.Map<ToDo>(toDoRequest);
@@ -44,14 +63,33 @@ namespace TodoList.Services
             
         }
 
+        public async Task<List<ToDo>> GetTaskByDateAndStatus(Guid userId, DateTime date, bool status)
+        {
+            var item = await _context.ToDos.Where(t => t.Date == date && t.Status == status).ToListAsync();
+            if(item != null)
+            {
+                return item;
+            }
+            return null;
+        }
+
         public async Task<ToDo> GetTaskById(Guid userId, Guid taskId)
         {
-            return await _context.ToDos.FirstOrDefaultAsync(t => t.UserId == userId && t.TaskId == taskId);
+            var item = await _context.ToDos.FirstOrDefaultAsync(t => t.UserId == userId && t.TaskId == taskId);
+            if(item != null)
+            {
+                return item;
+            }
+            return null;
         }
         public async Task<List<ToDo>> GetTasks(Guid userId)
         {
-            var item = _context.ToDos.Where(t => t.UserId == userId).ToListAsync();
-            return await item;
+            var item = await _context.ToDos.Where(t => t.UserId == userId).ToListAsync();
+            if(item != null)
+            {
+                return item;
+            }
+            return null;
         }
 
         public async Task<ToDo> UpdateTask(Guid userId, Guid taskId, ToDoRequest toDoRequest)
@@ -68,7 +106,7 @@ namespace TodoList.Services
                 return item;
             }
             return null;
-            
         }
+
     }
 }

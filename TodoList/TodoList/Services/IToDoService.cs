@@ -14,5 +14,7 @@ namespace TodoList.Services
         Task<ToDo> GetTaskById(Guid userId, Guid taskId);
         Task<ToDo> UpdateTask(Guid userId, Guid taskId, ToDoRequest toDoRequest);
         Task<List<ToDo>> DeleteTask(Guid userId, Guid taskId);
+        Task<List<ToDo>> GetTaskByDateAndStatus(Guid userId, DateTime date, bool status);
+        Task<List<ToDo>> CompleteTasks(Guid userId, List<Guid> listTaskId);
     }
 }

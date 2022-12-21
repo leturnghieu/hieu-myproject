@@ -11,7 +11,7 @@ using TodoList.Services;
 
 namespace TodoList.Controllers
 {
-    [Route("api/todos")]
+    [Route("api/[controller]")]
     [ApiController]
     [Authorize]
     public class ToDosController : ControllerBase
@@ -23,71 +23,103 @@ namespace TodoList.Controllers
             _toDoService = toDoService;
         }
         [HttpPost]
-        public async Task<ActionResult<ToDo>> CreateTask(ToDoRequest toDoRequest)
+        public async Task<ActionResult<TaskRespond<ToDo>>> CreateTask(ToDoRequest toDoRequest)
         {
-            var userId = Guid.Parse(HttpContext.User.GetUserId());
+            var userId = HttpContext.User.GetUserId();
             ToDo Task = await _toDoService.CreateTask(userId, toDoRequest);
-            return Ok(new Respond()
-            {
+            return Ok(new TaskRespond<ToDo>(){
                 Success = true,
-                Message = "Tạo task thành công!",
+                Message = "Tạo thành công!",
                 Data = Task
             });
         }
-        [HttpGet("tasks")]
-        public async Task<ActionResult<List<ToDo>>> GetAll()
+        [HttpGet]
+        public async Task<ActionResult<TaskRespond<List<ToDo>>>> GetAll()
         {
-            var userId = Guid.Parse(HttpContext.User.GetUserId());
+            var userId = HttpContext.User.GetUserId();
             List<ToDo> ListTask = await _toDoService.GetTasks(userId);
-            return Ok(new Respond()
+            return Ok(new TaskRespond<List<ToDo>>()
             {
                 Success = true,
                 Message = "Lấy danh sách task thành công!",
                 Data = ListTask
             });
         }
-        [HttpGet("tasks/{taskId}")]
-        public async Task<ActionResult<ToDo>> GetTaskById(Guid taskId)
+        [HttpGet("{taskId}")]
+        public async Task<ActionResult<TaskRespond<ToDo>>> GetTaskById(Guid taskId)
         {
-            var userId = Guid.Parse(HttpContext.User.GetUserId());
+            var userId = HttpContext.User.GetUserId();
             ToDo Task = await _toDoService.GetTaskById(userId, taskId);
-            return Ok(new Respond()
+            if(Task != null)
             {
-                Success = true,
-                Message = "Lấy task theo ID thành công!",
-                Data = Task
-            });
+                return Ok(new TaskRespond<ToDo>()
+                {
+                    Success = true,
+                    Message = "Lấy task theo ID thành công!",
+                    Data = Task
+                });
+            }
+            return NotFound();
         }
-        [HttpPut]
-        public async Task<ActionResult<ToDo>> UpdateTask(Guid taskId, ToDoRequest toDoRequest)
+        [HttpGet("tasks")]
+        public async Task<ActionResult<TaskRespond<List<ToDo>>>> GetTaskByDateAndStatus(DateTime date, bool status)
         {
-            var userId = Guid.Parse(HttpContext.User.GetUserId());
+            var userId = HttpContext.User.GetUserId();
+            List<ToDo> ListTask = await _toDoService.GetTaskByDateAndStatus(userId, date, status);
+            if(ListTask.Count > 0)
+            {
+                return Ok(new TaskRespond<List<ToDo>>
+                {
+                    Success = true,
+                    Message = "Tìm thành công!",
+                    Data = ListTask
+                });
+            }
+            return NotFound();
+            
+        }
+        [HttpPut("{taskId}")]
+        public async Task<ActionResult<TaskRespond<ToDo>>> UpdateTask(Guid taskId, ToDoRequest toDoRequest)
+        {
+            var userId = HttpContext.User.GetUserId();
             ToDo Task = await _toDoService.UpdateTask(userId, taskId, toDoRequest);
             if(Task == null)
             {
                 return NotFound();
             }
-            return Ok(new Respond()
+            return Ok(new TaskRespond<ToDo>()
             {
                 Success = true,
                 Message = "Sửa task theo ID thành công!",
                 Data = Task
             });
         }
-        [HttpDelete]
-        public async Task<ActionResult<List<ToDo>>> DeleteTask(Guid taskId)
+        [HttpDelete("{taskId}")]
+        public async Task<ActionResult<TaskRespond<List<ToDo>>>> DeleteTask(Guid taskId)
         {
-            var userId = Guid.Parse(HttpContext.User.GetUserId());
+            var userId = HttpContext.User.GetUserId();
             List<ToDo> ListTask = await _toDoService.DeleteTask(userId, taskId);
             if (ListTask == null)
             {
                 return NotFound();
             }
-            return Ok(new Respond()
+            return Ok(new TaskRespond<List<ToDo>>()
             {
                 Success = true,
                 Message = "Xóa task theo ID thành công!",
                 Data = ListTask
+            });
+        }
+        [HttpPatch("complete")]
+        public async Task<ActionResult<TaskRespond<List<ToDo>>>> CompleteTasks(List<Guid> listTaskId)
+        {
+            var userId = HttpContext.User.GetUserId();
+            List<ToDo> ListTasks = await _toDoService.CompleteTasks(userId, listTaskId);
+            return Ok(new TaskRespond<List<ToDo>>
+            {
+                Success = true,
+                Message = "Complete task thành công !",
+                Data = ListTasks
             });
         }
     }

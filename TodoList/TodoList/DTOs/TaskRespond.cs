@@ -4,10 +4,10 @@ using TodoList.Models;
 
 namespace TodoList.DTOs
 {
-    public class Respond
+    public class TaskRespond<T>
     {
         public bool Success { get; set; }
         public string Message { get; set; }
-        public object Data { get; set; }
+        public T Data { get; set; }
     }
 }
