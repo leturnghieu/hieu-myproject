@@ -24,7 +24,7 @@ namespace TodoList.Services
             _mapper = mapper;
         }
 
-        public async Task<List<ToDo>> CompleteTasks(Guid userId, List<Guid> taskIds)
+        public async Task<List<TaskRespond>> CompleteTasks(Guid userId, List<Guid> taskIds)
         {
             using (IDbContextTransaction transaction = _context.Database.BeginTransaction())
             {
@@ -37,62 +37,70 @@ namespace TodoList.Services
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
             }
-            return await _context.ToDos.Where(t => t.UserId == userId).ToListAsync();
+            List<ToDo> toDos = await _context.ToDos.Where(t => t.UserId == userId).ToListAsync();
+            List<TaskRespond> responds = _mapper.Map<List<TaskRespond>>(toDos);
+            return responds;
         }
 
-        public async Task<ToDo> CreateTask(Guid userId, ToDoRequest toDoRequest)
+        public async Task<TaskRespond> CreateTask(Guid userId, ToDoRequest toDoRequest)
         {
             ToDo item = _mapper.Map<ToDo>(toDoRequest);
             item.UserId = userId;
             item.Status = false;
             _context.Add(item);
             await _context.SaveChangesAsync();
-            return item;
+            TaskRespond taskRespond = _mapper.Map<TaskRespond>(item);
+            return taskRespond;
         }
 
-        public async Task<List<ToDo>> DeleteTask(Guid userId, Guid taskId)
+        public async Task<List<TaskRespond>> DeleteTask(Guid userId, Guid taskId)
         {
             var item = await _context.ToDos.FirstOrDefaultAsync(t => t.UserId == userId && t.TaskId == taskId);
             if(item != null)
             {
                 _context.Remove(item);
                 _context.SaveChanges();
-                return await _context.ToDos.ToListAsync();
+                List<ToDo> toDos = await _context.ToDos.Where(t => t.UserId == userId).ToListAsync();
+                List<TaskRespond> taskResponds = _mapper.Map<List<TaskRespond>>(toDos);
+                return taskResponds;
             }
             return null;
             
         }
 
-        public async Task<List<ToDo>> GetTaskByDateAndStatus(Guid userId, DateTime date, bool status)
+        public async Task<List<TaskRespond>> GetTaskByDateAndStatus(Guid userId, DateTime date, bool status)
         {
-            var item = await _context.ToDos.Where(t => t.Date == date && t.Status == status).ToListAsync();
+            var item = await _context.ToDos.Where(t => t.Date == date && t.Status == status && t.UserId == userId).ToListAsync();
             if(item != null)
             {
-                return item;
+                List<TaskRespond> taskResponds = _mapper.Map<List<TaskRespond>>(item);
+                return taskResponds;
             }
             return null;
         }
 
-        public async Task<ToDo> GetTaskById(Guid userId, Guid taskId)
+        public async Task<TaskRespond> GetTaskById(Guid userId, Guid taskId)
         {
             var item = await _context.ToDos.FirstOrDefaultAsync(t => t.UserId == userId && t.TaskId == taskId);
             if(item != null)
             {
-                return item;
+                TaskRespond taskRespond = _mapper.Map<TaskRespond>(item);
+                return taskRespond;
             }
             return null;
         }
-        public async Task<List<ToDo>> GetTasks(Guid userId)
+        public async Task<List<TaskRespond>> GetTasks(Guid userId)
         {
             var item = await _context.ToDos.Where(t => t.UserId == userId).ToListAsync();
             if(item != null)
             {
-                return item;
+                List<TaskRespond> listTaskRepond = _mapper.Map<List<TaskRespond>>(item); 
+                return listTaskRepond;
             }
             return null;
         }
 
-        public async Task<ToDo> UpdateTask(Guid userId, Guid taskId, ToDoRequest toDoRequest)
+        public async Task<TaskRespond> UpdateTask(Guid userId, Guid taskId, ToDoRequest toDoRequest)
         {
             var item = _context.ToDos.FirstOrDefault(t => t.UserId == userId && t.TaskId == taskId);
             if(item != null)
@@ -103,7 +111,8 @@ namespace TodoList.Services
                 item.Date = toDoRequest.Date;
                 _context.Update(item);
                 await _context.SaveChangesAsync();
-                return item;
+                TaskRespond taskRespond = _mapper.Map<TaskRespond>(item);
+                return taskRespond;
             }
             return null;
         }

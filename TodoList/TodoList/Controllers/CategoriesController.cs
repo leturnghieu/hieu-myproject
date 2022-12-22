@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using TodoList.DTOs;
 using TodoList.Models;
 using TodoList.Services;
 
@@ -19,9 +20,15 @@ namespace TodoList.Controllers
             _categoryService = categoryService;
         }
         [HttpGet]
-        public async Task<ActionResult<List<Category>>> GetAll()
+        public async Task<ActionResult<Respond<List<CategoryRespond>>>> GetAll()
         {
-            return await _categoryService.GetAll();
+            var item = await _categoryService.GetAll();
+            return Ok(new Respond<List<CategoryRespond>>
+            {
+                Success = true,
+                Message = "Lấy dữ liệu Category thành công!",
+                Data = item
+            });
         }
     }
 }
