@@ -2,11 +2,12 @@
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 using TodoList.DTOs;
+using TodoList.Models;
 using TodoList.Services;
 
 namespace TodoList.Controllers
 {
-    [Route("api/users")]
+    [Route("api/[controller]")]
     [ApiController]
     public class UsersController : ControllerBase
     {
@@ -20,20 +21,20 @@ namespace TodoList.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult<Respond>> SignUp(Register user)
+        public async Task<ActionResult<Respond<object>>> SignUp(Register user)
         {
             if (await _userService.SignUp(user) == null)
             {
                 _logger.LogInformation("Tao tai khoan that bai!");
-                return Ok(new Respond {
+                return Ok(new Respond<object> {
                     Success = false,
-                    Message = "Tao tai khoan that bai"
+                    Message = "Tao tai khoan that bai",
                 });
             }
             else
             {
                 _logger.LogInformation("Tao tai khoan thanh cong!");
-                return Ok(new Respond
+                return Ok(new Respond<object>
                 {
                     Success = true,
                     Message = "Tao tai khoan thanh cong"
@@ -41,14 +42,14 @@ namespace TodoList.Controllers
             }
         }
         [HttpPost("login")]
-        public async Task<ActionResult<Respond>> Login(Login user)
+        public async Task<ActionResult<Respond<object>>> Login(Login user)
         {
             var Token = await _userService.Login(user);
             if (Token == null)
             {
                 return BadRequest(500);  
             }
-            return Ok(new Respond
+            return Ok(new Respond<object>
             {
                 Success = true,
                 Message = "Dang nhap thanh cong",
