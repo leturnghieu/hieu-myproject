@@ -23,10 +23,5 @@ namespace TodoList.Models
         [MaxLength(20)]
         public string PhoneNumber { get; set; }
         public ICollection<ToDo> Tasks { get; set; }
-
-        internal ReadOnlySpan<char> GetUserId()
-        {
-            throw new NotImplementedException();
-        }
     }
 }
