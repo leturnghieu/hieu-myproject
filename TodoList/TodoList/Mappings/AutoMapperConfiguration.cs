@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using System.Collections.Generic;
 using TodoList.DTOs;
 using TodoList.Models;
 

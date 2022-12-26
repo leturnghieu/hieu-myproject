@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using TodoList.Models;
-
-namespace TodoList.DTOs
+﻿namespace TodoList.DTOs
 {
     public class CategoryRespond
     {

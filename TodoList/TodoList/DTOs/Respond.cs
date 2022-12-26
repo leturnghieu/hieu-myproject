@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Reflection.Metadata;
-using TodoList.Models;
-
-namespace TodoList.DTOs
+﻿namespace TodoList.DTOs
 {
     public class Respond<T>
     {

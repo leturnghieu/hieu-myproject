@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using TodoList.DTOs;
-using TodoList.Models;
 using TodoList.Services;
 
 namespace TodoList.Controllers
