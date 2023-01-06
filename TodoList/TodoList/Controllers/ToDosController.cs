@@ -46,7 +46,7 @@ namespace TodoList.Controllers
             });
         }
         [HttpGet("{taskId}")]
-        public async Task<ActionResult<Respond<ToDo>>> GetTaskById(Guid taskId)
+        public async Task<ActionResult<Respond<TaskRespond>>> GetTaskById(Guid taskId)
         {
             var userId = HttpContext.User.GetUserId();
             TaskRespond task = await _toDoService.GetTaskById(userId, taskId);
@@ -79,7 +79,7 @@ namespace TodoList.Controllers
             
         }
         [HttpPut("{taskId}")]
-        public async Task<ActionResult<Respond<ToDo>>> UpdateTask(Guid taskId, ToDoRequest toDoRequest)
+        public async Task<ActionResult<Respond<TaskRespond>>> UpdateTask(Guid taskId, ToDoRequest toDoRequest)
         {
             var userId = HttpContext.User.GetUserId();
             TaskRespond task = await _toDoService.UpdateTask(userId, taskId, toDoRequest);
